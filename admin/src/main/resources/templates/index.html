@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理首页</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body style="background-color:#140837;">
+<div class="row" style="margin-top: 300px;">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default login-panel">
+            <div class="panel-body">
+                <div shiro:user="">
+                    <p class="name" th:text="${session.loginUser.realName}+' 已登录'"></p>
+                </div>
+                <p shiro:guest="" th:text="未登录用户"></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<script type="text/javascript" th:src="@{/js/jquery-1.11.3.js}"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"-->
+<!--integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"-->
+<!--crossorigin="anonymous"></script>-->
+<script type="text/javascript" th:src="@{/js/common/common.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var ctxPath = /*[[@{/}]]*/ '';
+    /*]]>*/
+
+</script>
+</body>
+</html>

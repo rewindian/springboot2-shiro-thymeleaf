@@ -1,0 +1,39 @@
+spring:
+  # H2 DATABASE CONFIG
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 20
+    schema: classpath:/db/schema-h2.sql
+    data: classpath:/db/data-h2.sql
+    sql-script-encoding: utf-8
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: sa
+    platform: h2
+    initialization-mode: always
+    continue-on-error: true
+  h2:
+    console:
+      enabled: true
+      path: /console
+  thymeleaf:
+    cache: false # 开发时关闭缓存,不然没法看到实时页面
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 10000
+    lettuce:
+      pool:
+        max-idle: 10
+        max-active: 10
+        min-idle: 5
+        max-wait: 10000
+    database: 0
+
+#########
+custom:
+  #登录页地址
+  login-url: http://localhost:9001/portal/login.htm

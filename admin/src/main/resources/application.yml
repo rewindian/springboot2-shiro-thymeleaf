@@ -1,0 +1,72 @@
+# Tomcat
+server:
+    tomcat:
+        uri-encoding: UTF-8
+        max-threads: 1000
+        min-spare-threads: 30
+    port: 8082
+    servlet:
+      context-path: /admin
+      session:
+        tracking-modes: cookie
+        cookie:
+          http-only: true
+# mysql
+spring:
+    # 环境 dev|test|prod
+    profiles:
+        active: dev
+    # jackson时间格式化
+    jackson:
+        time-zone: GMT+8
+        date-format: yyyy-MM-dd HH:mm:ss
+    # 指定静态资源的路径
+    resources:
+        static-locations: classpath:/static/,classpath:/views/
+    servlet:
+      multipart:
+        enabled: true
+        max-file-size: 100MB
+        max-request-size: 100MB
+    devtools:
+      restart:
+        enabled: true #是否开启开发者工具（true/false）
+        exclude: static/**,templates/**
+        additional-paths: src/main/java
+    thymeleaf:
+      mode: HTML
+      encoding: UTF-8
+      prefix: classpath:/templates/
+      suffix: .html
+      servlet:
+        content-type: text/html
+      cache: false
+    cache:
+      redis:
+        time-to-live: 60s
+      type: redis
+    jmx:
+      enabled: false
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:com/sst/**/mapping/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.sst.service.system.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 2
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true

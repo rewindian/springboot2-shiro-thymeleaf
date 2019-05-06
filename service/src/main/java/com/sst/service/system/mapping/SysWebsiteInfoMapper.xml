@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sst.service.system.dao.SysWebsiteInfoMapper">
+    <!-- 获取站点信息 -->
+    <select id="getWebsiteInfo" resultType="com.sst.service.system.entity.SysWebsiteInfo">
+        select * from sys_website_info where dr = 0 order by create_time limit 1
+    </select>
+
+    <!-- 软删除所有站点信息 -->
+    <update id="dropAllRecord" >
+        update sys_website_info set dr = 1
+    </update>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sst.service.system.dao.SysResourceMapper">
+    <select id="getSysResourceByUserId" resultType="com.sst.service.system.entity.SysResource">
+        SELECT
+            *
+        FROM
+            sys_resource
+        WHERE
+            id IN (
+              SELECT resource_id FROM sys_role_resource WHERE role_id IN (
+                SELECT role_id FROM sys_user_role WHERE user_id = #{userId}
+              )
+            )
+    </select>
+
+    <select id="getSysResourceByRoleId" resultType="com.sst.service.system.entity.SysResource">
+        SELECT
+            *
+        FROM
+            sys_resource
+        WHERE
+            id IN (
+             SELECT resource_id FROM sys_role_resource WHERE role_id = #{roleId}
+            )
+    </select>
+
+    <select id="getRoleResources" resultType="com.sst.service.system.entity.SysResource">
+        SELECT
+            t1.role_id,
+            t2.*
+        FROM
+            sys_role_resource t1
+            LEFT JOIN sys_resource t2 ON t1.resource_id = t2.id
+        WHERE
+            t1.role_id IN
+            <foreach collection="roleIds" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        ORDER BY
+            t1.role_id,
+            t2.parent_id,
+            t2.sort_order
+    </select>
+</mapper>
