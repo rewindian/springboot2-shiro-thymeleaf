@@ -6,10 +6,6 @@ import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @Author: Ian
- * @Date: 2019/4/18
- */
 public class CustomShiroHttpServletResponse extends ShiroHttpServletResponse {
 
     public CustomShiroHttpServletResponse(HttpServletResponse wrapped, ServletContext context, ShiroHttpServletRequest request) {

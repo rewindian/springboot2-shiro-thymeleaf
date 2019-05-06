@@ -12,10 +12,7 @@ import org.springframework.beans.factory.BeanInitializationException;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @Author: Ian
- * @Date: 2019/4/18
- */
+
 public class CustomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 
     @Override

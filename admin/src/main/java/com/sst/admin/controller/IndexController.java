@@ -25,6 +25,6 @@ public class IndexController {
                 log.info(user.getRealName());
             }
         }
-        return "/index.html";
+        return "index";
     }
 }
