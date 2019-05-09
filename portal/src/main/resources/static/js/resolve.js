@@ -1,4 +1,4 @@
-define(["require", "promise"], function(require, Promise){
+define(["require"], function(require){
     var resolve = function(dep) {
         return function() {
             if (!(dep instanceof Array)) {

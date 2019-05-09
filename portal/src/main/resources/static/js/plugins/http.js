@@ -1,7 +1,7 @@
 /**
  * axios拦截器设置
  */
-define(['axios', 'promise', 'com'], function (Axios, Promise, Com) {
+define(['axios', 'com'], function (Axios, Com) {
     Axios.interceptors.request.use(
         function (request) {
             request.headers["Content-Type"] = "application/json;charset=UTF-8";

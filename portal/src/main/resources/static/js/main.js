@@ -7,7 +7,6 @@ require.config({
         vueRouter: "lib/vue/vue-router",
         router: "router",
         header: "components/header",
-        promise: "lib/promise/bluebird.min",
         com: "common/core",
         axios: "lib/axios/axios.min",
         http: "plugins/http"
@@ -15,7 +14,7 @@ require.config({
     shim: {
         vueRouter: ['vue'],
         com: ['jquery'],
-        axios: ['promise'],
+        // axios: ['promise'],
         http: ['axios']
     },
     waitSeconds: 0

@@ -331,7 +331,7 @@ var com;
                 checkTel: function (tel) { //判断座机号码
                     return /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(tel);
                 },
-                checkPhoneNum(tel) { //判断电话号码
+                checkPhoneNum: function (tel) { //判断电话号码
                     return this.checkMobile(tel) || this.checkTel(tel);
                 },
                 checkUsername: function (str) {
