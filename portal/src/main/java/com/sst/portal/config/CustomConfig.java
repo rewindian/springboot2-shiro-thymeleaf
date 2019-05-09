@@ -25,6 +25,6 @@ public class CustomConfig {
      */
     private String adminIndex;
 
-    private String frontendPrefix;
+    private String appDomainRoot;
 
 }

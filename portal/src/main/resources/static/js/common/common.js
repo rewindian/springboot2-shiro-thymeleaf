@@ -5,6 +5,47 @@ if (!console || typeof console.log !== 'function') {
     }
 }
 
+/**
+ * 时间t内连续触发事件fn,仅仅会执行第一次
+ */
+function Debounce(fn, t) {
+    var delay = t || 300;
+    var timer;
+    return function () {
+        var vm = this;
+        console.log('事件开始:' + new Date().getTime());
+        var args = arguments;
+        if (!timer) {
+            timer = setTimeout(function () {
+                timer = null;
+                console.log('事件执行:' + new Date().getTime());
+                fn.apply(vm, args);
+            }, delay);
+        }
+    }
+}
+
+/**
+ * 时间t内连续触发事件fn,仅仅会在时间t后执行最后一次
+ */
+function Throttle(fn, t) {
+    var delay = t || 300;
+    var timer;
+    return function () {
+        var vm = this;
+        console.log('事件开始:' + new Date().getTime());
+        var args = arguments;
+        if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(function () {
+            timer = null;
+            console.log('事件执行:' + new Date().getTime());
+            fn.apply(vm, args);
+        }, delay);
+    }
+}
+
 (function () {
     Array.prototype.contain = function (item) {
         if (!this || this.length === 0) {
@@ -139,168 +180,178 @@ if (!console || typeof console.log !== 'function') {
 var com;
 
 (function ($) {
-    com = {
-        ajax: function (opts) {
-            if (typeof opts === 'string') {
-                opts = {
-                    url: opts
+    function comInit() {
+        com = {
+            ajax: function (opts) {
+                if (typeof opts === 'string') {
+                    opts = {
+                        url: opts
+                    };
+                }
+                var ajaxDefaults = {
+                    dataType: 'json',
+                    contentType: 'application/json;charset=UTF-8',
+                    cache: false, //设置为false将不会从浏览器缓存中加载请求信息。开发false,发布true   *改为了false*
+                    error: function (e) {
+                        // console.log(e)
+                        var msg = e.statusText;
+                        console.error('请求出错,请联系管理员: \r\n' + opts.url + '\r\n', msg);
+                    }
                 };
-            }
-            var ajaxDefaults = {
-                dataType: 'json',
-                contentType: 'application/json;charset=UTF-8',
-                cache: false, //设置为false将不会从浏览器缓存中加载请求信息。开发false,发布true   *改为了false*
-                error: function (e) {
-                    // console.log(e)
-                    var msg = e.statusText;
-                    console.error('请求出错,请联系管理员: \r\n' + opts.url + '\r\n', msg);
+                opts = $.extend(ajaxDefaults, opts);
+                return $.ajax(opts);
+            },
+            get: function (url, data, callBack) {
+                return this.ajax({
+                    url: url,
+                    data: data,
+                    type: 'get',
+                    success: callBack
+                });
+            },
+            post: function (url, data, callBack) {
+                if (typeof data !== 'string') {
+                    data = JSON.stringify(data);
                 }
-            };
-            opts = $.extend(ajaxDefaults, opts);
-            return $.ajax(opts);
-        },
-        get: function (url, data, callBack) {
-            return this.ajax({
-                url: url,
-                data: data,
-                type: 'get',
-                success: callBack
-            });
-        },
-        post: function (url, data, callBack) {
-            if (typeof data !== 'string') {
-                data = JSON.stringify(data);
-            }
-            return this.ajax({
-                url: url,
-                data: data,
-                type: 'post',
-                success: callBack
-            });
-        },
-        ajaxSuccess: function (res, noData) {
-            return noData ? res && res.result === "000000" : res && res.result === "000000" && !this.isEmpty(res.data);
-        },
-        isEmpty: function (param) {
-            if (param === null) return true;
-            if (param === 'null') return true;
-            if (param === '') return true;
-            if (param === undefined) return true;
-            if (this.isEmptyObject(param)) return true;
-            if ((this.isArray(param)) && (param.length === 0)) return true;
-            return false;
-        },
-        isNotEmpty: function (param) {
-            return !this.isEmpty(param);
-        },
-        isArray: function (value) {
-            if (typeof Array.isArray === "function") {
-                return Array.isArray(value);
-            } else {
-                return Object.prototype.toString.call(value) === "[object Array]";
-            }
-        },
-        isEmptyObject: function (obj) {
-            for (var key in obj) {
-                return false
-            }
-            return true
-        },
-        tips: function (message, type) { // sure 成功 绿色  caution警示橙色   red 红色
-            var colorClass = 'sure';
-            if (type === 1) {
-                colorClass = 'caution';
-            } else if (type === 2) {
-                colorClass = 'red';
-            }
-            var $tips = $('<div class="yql_jcxt_tips ' + colorClass + ' dis_none">' + message + '</div>');
-            $("body").append($tips);
-            $tips.show().delay(2000).fadeOut(100);
-            setTimeout(function () {
-                $tips.remove();
-            }, 2200)
+                return this.ajax({
+                    url: url,
+                    data: data,
+                    type: 'post',
+                    success: callBack
+                });
+            },
+            ajaxSuccess: function (res, noData) {
+                return noData ? res && res.result === "000000" : res && res.result === "000000" && !this.isEmpty(res.data);
+            },
+            isEmpty: function (param) {
+                if (param === null) return true;
+                if (param === 'null') return true;
+                if (param === '') return true;
+                if (param === undefined) return true;
+                if (this.isEmptyObject(param)) return true;
+                if ((this.isArray(param)) && (param.length === 0)) return true;
+                return false;
+            },
+            isNotEmpty: function (param) {
+                return !this.isEmpty(param);
+            },
+            isArray: function (value) {
+                if (typeof Array.isArray === "function") {
+                    return Array.isArray(value);
+                } else {
+                    return Object.prototype.toString.call(value) === "[object Array]";
+                }
+            },
+            isEmptyObject: function (obj) {
+                for (var key in obj) {
+                    return false
+                }
+                return true
+            },
+            tips: function (message, type) { // sure 成功 绿色  caution警示橙色   red 红色
+                var colorClass = 'sure';
+                if (type === 1) {
+                    colorClass = 'caution';
+                } else if (type === 2) {
+                    colorClass = 'red';
+                }
+                var $tips = $('<div class="yql_jcxt_tips ' + colorClass + ' dis_none">' + message + '</div>');
+                $("body").append($tips);
+                $tips.show().delay(2000).fadeOut(100);
+                setTimeout(function () {
+                    $tips.remove();
+                }, 2200)
 
-        },
-        confirm: function (title, tips, callbackOk) {
-            var content = '  <div id="jy_dia">\n' +
-                '    <div class="f20 c555 lh36 mgl66">\n' +
-                '     <i class="dia_iconTips mgr10"></i><span class="dis_inb lh36 v_m">' + tips + '</span>\n' +
-                '    </div>\n' +
-                '    <div class="yql_dia_btnBox mgt50 clearfix t_c  ">\n' +
-                '      <a href="javascript:;" class="yql_jc_btn02 sumbit  mgr10">确认</a>\n' +
-                '      <a href="javascript:;" class="yql_jc_btn02 cancel ">取消</a>\n' +
-                '    </div>\n' +
-                '  </div>\n';
-            var dialog = art.dialog({
-                title: title,
-                content: content, //弹出框的内容
-                width: '500px', //弹出框的宽度
-                height: '206px',
-                initialize: function () {
-                    var that = this;
-                    $("#jy_dia").on("click", "a.sumbit", function () {
-                        callbackOk();
-                        that.close();
-                    })
-                    $("#jy_dia").on("click", "a.cancel", function () {
-                        that.close();
-                    })
-                } //自定义函数
-            });
+            },
+            confirm: function (title, tips, callbackOk) {
+                var content = '  <div id="jy_dia">\n' +
+                    '    <div class="f20 c555 lh36 mgl66">\n' +
+                    '     <i class="dia_iconTips mgr10"></i><span class="dis_inb lh36 v_m">' + tips + '</span>\n' +
+                    '    </div>\n' +
+                    '    <div class="yql_dia_btnBox mgt50 clearfix t_c  ">\n' +
+                    '      <a href="javascript:;" class="yql_jc_btn02 sumbit  mgr10">确认</a>\n' +
+                    '      <a href="javascript:;" class="yql_jc_btn02 cancel ">取消</a>\n' +
+                    '    </div>\n' +
+                    '  </div>\n';
+                var dialog = art.dialog({
+                    title: title,
+                    content: content, //弹出框的内容
+                    width: '500px', //弹出框的宽度
+                    height: '206px',
+                    initialize: function () {
+                        var that = this;
+                        $("#jy_dia").on("click", "a.sumbit", function () {
+                            callbackOk();
+                            that.close();
+                        })
+                        $("#jy_dia").on("click", "a.cancel", function () {
+                            that.close();
+                        })
+                    } //自定义函数
+                });
 
-        },
-        randomNum: function (min, max) {
-            var range = Math.abs(max - min);
-            var rand = Math.random();
-            return Math.min(min, max) + Math.round(rand * range); //四舍五入
-        },
-        validation: {
-            getByteLen: function (val) { //获取字符串长度中文占2个字符
-                var len = 0;
-                for (var i = 0; i < val.length; i++) {
-                    var a = val.charAt(i);
-                    if (a.match(/[^\x00-\xff]/ig) != null) {
-                        len += 2;
+            },
+            randomNum: function (min, max) {
+                var range = Math.abs(max - min);
+                var rand = Math.random();
+                return Math.min(min, max) + Math.round(rand * range); //四舍五入
+            },
+            validation: {
+                getByteLen: function (val) { //获取字符串长度中文占2个字符
+                    var len = 0;
+                    for (var i = 0; i < val.length; i++) {
+                        var a = val.charAt(i);
+                        if (a.match(/[^\x00-\xff]/ig) != null) {
+                            len += 2;
+                        }
+                        else {
+                            len += 1;
+                        }
                     }
-                    else {
-                        len += 1;
+                    return len;
+                },
+                includeChn: function (val) { //是否包含中文
+                    var flag = false;
+                    for (var i = 0; i < val.length; i++) {
+                        var a = val.charAt(i);
+                        if (a.match(/[^\x00-\xff]/ig) != null) {
+                            flag = true;
+                            break;
+                        }
                     }
+                    return flag;
+                },
+                checkSpecChar: function (str) { //是否包含特殊字符
+                    var containSpecial = RegExp(/[(\ )(\~)(\!)(\@)(\#)(\$)(\%)(\^)(\&)(\*)(\()(\))(\-)(\_)(\+)(\=)(\[)(\])(\{)(\})(\|)(\\)(\;)(\:)(\')(\")(\,)(\.)(\/)(\<)(\>)(\?)(\)]+/);
+                    return containSpecial.test(str);
+                },
+                checkMobile: function (tel) { //判断移动电话号码
+                    return /^1\d{10}$/.test(tel);
+                },
+                checkTel: function (tel) { //判断座机号码
+                    return /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(tel);
+                },
+                checkPhoneNum(tel) { //判断电话号码
+                    return this.checkMobile(tel) || this.checkTel(tel);
+                },
+                checkUsername: function (str) {
+                    return /^[a-zA-Z0-9]{6,20}$/.test(str);
+                },
+                checkEmail: function (str) {
+                    return /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(str);
                 }
-                return len;
-            },
-            includeChn: function (val) { //是否包含中文
-                var flag = false;
-                for (var i = 0; i < val.length; i++) {
-                    var a = val.charAt(i);
-                    if (a.match(/[^\x00-\xff]/ig) != null) {
-                        flag = true;
-                        break;
-                    }
-                }
-                return flag;
-            },
-            checkSpecChar: function (str) { //是否包含特殊字符
-                var containSpecial = RegExp(/[(\ )(\~)(\!)(\@)(\#)(\$)(\%)(\^)(\&)(\*)(\()(\))(\-)(\_)(\+)(\=)(\[)(\])(\{)(\})(\|)(\\)(\;)(\:)(\')(\")(\,)(\.)(\/)(\<)(\>)(\?)(\)]+/);
-                return containSpecial.test(str);
-            },
-            checkMobile: function (tel) { //判断移动电话号码
-                return /^1\d{10}$/.test(tel);
-            },
-            checkTel: function (tel) { //判断座机号码
-                return /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(tel);
-            },
-            checkPhoneNum(tel) { //判断电话号码
-                return this.checkMobile(tel) || this.checkTel(tel);
-            },
-            checkUsername: function (str) {
-                return /^[a-zA-Z0-9]{6,20}$/.test(str);
-            },
-            checkEmail: function (str) {
-                return /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(str);
             }
         }
+        return com;
     }
-})($);
+
+    // if (typeof define === 'function' && define.amd) {
+    //     define(['jquery'], function ($) {
+    //         return comInit($);
+    //     });
+    // }
+    comInit();
+})(jQuery);
 
 
 

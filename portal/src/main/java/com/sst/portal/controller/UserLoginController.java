@@ -1,5 +1,6 @@
 package com.sst.portal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sst.core.constant.CommonConstants;
 import com.sst.core.model.ResponseDomain;
 import com.sst.portal.config.CustomConfig;
@@ -113,5 +114,13 @@ public class UserLoginController {
         } else {
             throw new UnauthorizedException("用户未登录");
         }
+    }
+
+    @RequestMapping(value = "/testHttp", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseDomain testHttp() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "admin");
+        return ResponseDomain.getSuccessResponse().setData(jsonObject);
     }
 }

@@ -48,3 +48,4 @@ slave:
 custom:
   #后台首页地址
   admin-index: http://localhost:9002/admin/
+  app-domain-root: http://ued.t.huijiaoyun.com/zhxy/app_dev/
