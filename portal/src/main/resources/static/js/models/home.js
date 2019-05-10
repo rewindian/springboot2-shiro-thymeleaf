@@ -1,14 +1,15 @@
-define(['com'], function (Com) {
+define(['com', 'js/api/homeApi.js'], function (Com, homeApi) {
     return {
-        template: Com.getTemplate('views/home.html'),
+        template: Com.getTemplate('home.html'),
         data: function () {
             return {
                 name: ''
             }
         },
+        methods: {},
         created: function () {
             var vm = this;
-            this.$http.get(ctxPath + 'testHttp').then(function (res) {
+            homeApi.getName({id: '123'}).then(function (res) {
                 var data = Com.assign({}, res.data);
                 vm.name = data.name;
             });

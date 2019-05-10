@@ -123,4 +123,15 @@ public class UserLoginController {
         jsonObject.put("name", "admin");
         return ResponseDomain.getSuccessResponse().setData(jsonObject);
     }
+
+    @RequestMapping(value = "/testSession", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseDomain testSession() {
+        Subject subject = SecurityUtils.getSubject();
+        if (null != subject && null != subject.getPrincipal()) {
+            return ResponseDomain.getSuccessResponse();
+        } else {
+            throw new UnauthorizedException("用户未登录");
+        }
+    }
 }

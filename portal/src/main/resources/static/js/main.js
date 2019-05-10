@@ -14,8 +14,8 @@ require.config({
     shim: {
         vueRouter: ['vue'],
         com: ['jquery'],
-        // axios: ['promise'],
-        http: ['axios']
+        http: ['axios'],
+        header: ['vue']
     },
     waitSeconds: 0
 });
@@ -23,11 +23,7 @@ require.config({
 require(["vue", "vueRouter", "router", "http", "header"], function (Vue, vueRouter, router, http) {
     Vue.use(vueRouter);
     Vue.use(http);
-    var routes = new vueRouter({
-        routes: router
-    });
-
     new Vue({
-        router: routes
+        router: router
     }).$mount("#indexApp");
 });

@@ -46,7 +46,7 @@ public class ShiroConfig extends BaseShiroConfig {
         //只有登录才能访问用authc,登录和记住我都能访问用user
         filterMap.put("/**", "user,userSession");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
-        shiroFilterFactoryBean.setLoginUrl("/login.htm");
+        shiroFilterFactoryBean.setLoginUrl("/testSession");
         return shiroFilterFactoryBean;
     }
 

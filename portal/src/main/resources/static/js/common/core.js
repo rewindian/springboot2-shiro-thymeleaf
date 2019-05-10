@@ -105,6 +105,7 @@
                 type: 'get',
                 async: false,
                 timeout: 5000,
+                contentType: 'text/html;charset=UTF-8',
                 success: function (res) {
                     templateHtml = res;
                 },
